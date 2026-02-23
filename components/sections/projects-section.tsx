@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { withBasePath } from "@/lib/base-path";
 import { useI18n } from "@/lib/i18n";
 import type { Project } from "@/lib/portfolio-data";
 import { ExternalLink, Github } from "lucide-react";
@@ -46,7 +47,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 <div className="px-6 pt-6">
                   <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border/60 bg-muted/30">
                     <Image
-                      src={project.imageSrc}
+                      src={withBasePath(project.imageSrc)}
                       alt={project.imageAlt[language]}
                       fill
                       className="object-cover object-top transition-transform duration-500 hover:scale-[1.02]"
@@ -80,7 +81,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
             <DialogContent className="max-h-[90vh] max-w-4xl grid-rows-[auto_minmax(0,1fr)] overflow-hidden p-0 sm:max-w-4xl">
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-lg border-b border-border/60 bg-muted/30">
                 <Image
-                  src={project.imageSrc}
+                  src={withBasePath(project.imageSrc)}
                   alt={project.imageAlt[language]}
                   fill
                   className="object-cover object-top"

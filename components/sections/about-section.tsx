@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { withBasePath } from "@/lib/base-path";
 import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/portfolio-data";
 
@@ -33,7 +34,7 @@ export function AboutSection() {
           <div className="grid min-h-[220px] place-items-center px-6 pb-6 md:min-h-full md:py-6">
             <div className="relative aspect-square w-full max-w-52 md:max-w-60">
               <Image
-                src="/profile/hotdog.png"
+                src={withBasePath("/profile/hotdog.png")}
                 alt="Santiago Giraldo"
                 fill
                 className="object-contain drop-shadow-[5px_5px_5px_rgba(0,0,0,0.75)]"

@@ -3,9 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-
-const APP_BASE_PATH =
-  process.env.NODE_ENV === "production" ? "/portfolio_v7" : "";
+import { APP_BASE_PATH } from "@/lib/base-path";
 
 const SEQUENCES = {
   desktop: {
