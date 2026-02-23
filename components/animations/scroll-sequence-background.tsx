@@ -4,13 +4,16 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
+const APP_BASE_PATH =
+  process.env.NODE_ENV === "production" ? "/portfolio_v7" : "";
+
 const SEQUENCES = {
   desktop: {
-    basePath: "/animations/desktop",
+    basePath: `${APP_BASE_PATH}/animations/desktop`,
     frameCount: 120,
   },
   mobile: {
-    basePath: "/animations/mobile",
+    basePath: `${APP_BASE_PATH}/animations/mobile`,
     frameCount: 120,
   },
 } as const;
