@@ -12,7 +12,9 @@ import {
 
 type Language = "es" | "en";
 
-type Dictionary = Record<string, string | Dictionary>;
+interface Dictionary {
+  [key: string]: string | Dictionary;
+}
 
 const translations = {
   es: {
