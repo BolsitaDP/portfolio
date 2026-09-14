@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
 import type { EducationItem } from "@/lib/portfolio-data";
+import { GraduationCap } from "lucide-react";
 
 type EducationSectionProps = {
   education: EducationItem[];
@@ -27,18 +28,25 @@ export function EducationSection({ education }: EducationSectionProps) {
         {education.map((item) => (
           <Card key={`${item.title.en}-${item.period.en}`} className="rounded-xl">
             <CardHeader>
-              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <CardTitle className="text-lg leading-6">
-                  {item.title[language]}
-                </CardTitle>
-                <Badge variant="outline">{item.period[language]}</Badge>
+              <div className="flex items-start gap-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <GraduationCap className="size-4" aria-hidden="true" />
+                </span>
+                <div className="flex-1 space-y-2">
+                  <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                    <CardTitle className="text-lg leading-6">
+                      {item.title[language]}
+                    </CardTitle>
+                    <Badge variant="outline">{item.period[language]}</Badge>
+                  </div>
+                  <CardDescription>
+                    {item.institution} · {item.location[language]}
+                  </CardDescription>
+                </div>
               </div>
-              <CardDescription>
-                {item.institution} · {item.location[language]}
-              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm leading-6 text-muted-foreground">
+              <p className="text-sm leading-6 text-muted-foreground md:pl-12">
                 {item.summary[language]}
               </p>
             </CardContent>
