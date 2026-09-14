@@ -43,7 +43,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         {projects.map((project) => (
           <Dialog key={project.title.en}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer rounded-xl transition-transform duration-200 hover:-translate-y-1">
+              <Card className="cursor-pointer rounded-xl hover:-translate-y-1">
                 <div className="px-6 pt-6">
                   <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border/60 bg-muted/30">
                     <Image

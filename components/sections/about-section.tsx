@@ -33,6 +33,10 @@ export function AboutSection() {
 
           <div className="grid min-h-[220px] place-items-center px-6 pb-6 md:min-h-full md:py-6">
             <div className="relative aspect-square w-full max-w-52 md:max-w-60">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-6 rounded-full bg-primary/10 blur-2xl"
+              />
               <Image
                 src={withBasePath("/profile/hotdog.png")}
                 alt="Santiago Giraldo"
