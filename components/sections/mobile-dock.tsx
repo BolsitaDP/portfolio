@@ -28,9 +28,10 @@ export function MobileDock() {
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] md:hidden">
       <nav
         aria-label="Mobile navigation"
-        className="pointer-events-auto mx-auto w-full max-w-lg rounded-[1.35rem] border border-white/12 bg-background/55 p-1.5 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+        className="glass-panel pointer-events-auto relative mx-auto w-full max-w-lg rounded-[1.35rem] bg-background/55 bg-gradient-to-b from-white/[0.08] to-transparent p-1.5 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150"
       >
-        <ul className="grid grid-cols-7 gap-1">
+        <span className="glass-ripple" aria-hidden="true" />
+        <ul className="relative grid grid-cols-7 gap-1">
           {items.map((item) => {
             const Icon = item.icon;
             const label = item.key === "home" ? "Home" : t(`nav.${item.key}`);

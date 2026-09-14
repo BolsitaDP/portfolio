@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Yuji_Boku } from "next/font/google";
+import { GlassFilters } from "@/components/ui/glass-filters";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${yujiBoku.variable} antialiased`}
       >
+        <GlassFilters />
         <I18nProvider>
           {children}
           <Toaster position="top-right" richColors closeButton />

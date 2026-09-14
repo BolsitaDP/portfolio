@@ -9,8 +9,9 @@ export function HomeSection() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-card to-muted/40 p-8 shadow-sm backdrop-blur-md md:p-12"
+      className="glass-panel relative overflow-hidden rounded-2xl bg-card/60 bg-gradient-to-br from-white/[0.07] to-transparent p-8 shadow-sm backdrop-blur-xl backdrop-saturate-150 md:p-12"
     >
+      <span className="glass-ripple" aria-hidden="true" />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-20 -top-24 size-64 rounded-full bg-primary/10 blur-3xl"

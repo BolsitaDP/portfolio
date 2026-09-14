@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { GlassButton } from "@/components/ui/glass-button";
 import { withBasePath } from "@/lib/base-path";
 import { useI18n } from "@/lib/i18n";
 import type { Project } from "@/lib/portfolio-data";
@@ -134,28 +134,16 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 {(project.liveUrl || project.repoUrl) && (
                   <div className="flex flex-wrap gap-3">
                     {project.liveUrl ? (
-                      <Button asChild>
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <ExternalLink className="size-4" />
-                          {t("projects.liveDemo")}
-                        </a>
-                      </Button>
+                      <GlassButton href={project.liveUrl} target="_blank" rel="noreferrer">
+                        <ExternalLink className="size-4" />
+                        {t("projects.liveDemo")}
+                      </GlassButton>
                     ) : null}
                     {project.repoUrl ? (
-                      <Button asChild variant="outline">
-                        <a
-                          href={project.repoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Github className="size-4" />
-                          {t("projects.repository")}
-                        </a>
-                      </Button>
+                      <GlassButton href={project.repoUrl} target="_blank" rel="noreferrer">
+                        <Github className="size-4" />
+                        {t("projects.repository")}
+                      </GlassButton>
                     ) : null}
                   </div>
                 )}

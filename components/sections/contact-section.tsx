@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { GlassButton } from "@/components/ui/glass-button";
 import {
   Card,
   CardContent,
@@ -49,19 +49,17 @@ export function ContactSection() {
                 </p>
               </div>
             </div>
-            <Button type="button" className="cursor-pointer" variant="outline" onClick={handleCopyEmail}>
+            <GlassButton onClick={handleCopyEmail}>
               <Copy className="size-4" />
               {t("contact.copyEmail")}
-            </Button>
+            </GlassButton>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild variant="outline">
-              <a href={profile.linkedin} target="_blank" rel="noreferrer">
-                <Linkedin className="size-4" />
-                {t("contact.linkedin")}
-              </a>
-            </Button>
+            <GlassButton href={profile.linkedin} target="_blank" rel="noreferrer">
+              <Linkedin className="size-4" />
+              {t("contact.linkedin")}
+            </GlassButton>
           </div>
         </CardContent>
       </Card>

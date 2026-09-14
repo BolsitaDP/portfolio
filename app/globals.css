@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@property --glass-edge-opacity {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.3;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -114,6 +120,100 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer components {
+  /*
+   * CSS-only "liquid glass" edge + grain, layered on top of Tailwind's own
+   * backdrop-blur/saturate utilities. `::before` fakes a glass-edge border
+   * (a gradient ring via the mask-composite "double background" trick,
+   * brighter where light would catch the top-left corner) instead of a
+   * flat border color. `::after` adds a faint frosted grain using the SVG
+   * `glass-grain` filter from GlassFilters — `filter: url()` (unlike
+   * `backdrop-filter: url()`) has broad cross-browser support.
+   */
+  .glass-panel {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .glass-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, var(--glass-edge-opacity, 0.3)),
+      rgba(255, 255, 255, 0.04) 35%,
+      rgba(255, 255, 255, 0.02) 65%,
+      rgba(255, 255, 255, 0.16)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: --glass-edge-opacity 0.3s ease;
+  }
+
+  .glass-panel:hover::before {
+    --glass-edge-opacity: 0.55;
+  }
+
+  .glass-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    filter: url(#glass-grain);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  /*
+   * Optional extra layer: refracts whatever is behind the panel. Only
+   * Chrome/Chromium apply SVG references inside backdrop-filter, so this
+   * is an isolated element with nothing else in its own backdrop-filter
+   * value — other browsers just render it as a no-op, never breaking the
+   * base blur/border/grain above.
+   */
+  .glass-ripple {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    backdrop-filter: url(#liquid-distortion);
+    opacity: 0.6;
+  }
+
+  /*
+   * The button-specific extra: a soft highlight that follows the cursor
+   * (via --glass-mouse-x/y, set from a mousemove handler) plus a press
+   * scale-down, replacing what a JS glass library would give a button.
+   */
+  .glass-button {
+    display: inline-flex;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    background-image: radial-gradient(
+        140px circle at var(--glass-mouse-x, 50%) var(--glass-mouse-y, 50%),
+        rgba(255, 255, 255, 0.16),
+        transparent 65%
+      ),
+      linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06));
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .glass-button:active {
+    transform: scale(0.96);
+  }
 }
 
 @layer base {

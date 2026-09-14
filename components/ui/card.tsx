@@ -2,18 +2,20 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function Card({ className, children, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
       className={cn(
-        "relative bg-card/70 text-card-foreground flex flex-col gap-6 rounded-xl border border-border/60 py-6 shadow-sm backdrop-blur-md transition-all duration-300",
-        "before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-primary/70 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300",
-        "hover:border-primary/30 hover:shadow-[0_24px_60px_-30px_var(--primary)] hover:before:opacity-100",
+        "glass-panel bg-card/60 bg-gradient-to-br from-white/[0.07] to-transparent text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
+        "hover:shadow-[0_24px_60px_-30px_var(--primary)]",
         className
       )}
       {...props}
-    />
+    >
+      <span className="glass-ripple" aria-hidden="true" />
+      {children}
+    </div>
   )
 }
 

@@ -1,14 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { GlassButton } from "@/components/ui/glass-button";
 import { useI18n } from "@/lib/i18n";
 
 export function SiteHeader() {
   const { t, toggleLanguage } = useI18n();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
-      <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
+    <header className="glass-panel sticky top-0 z-50 bg-background/70 bg-gradient-to-b from-white/[0.05] to-transparent backdrop-blur-xl backdrop-saturate-150">
+      <span className="glass-ripple" aria-hidden="true" />
+      <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <span
           className="text-base leading-none text-foreground md:text-lg"
           style={{ fontFamily: "var(--font-yuji-boku)" }}
@@ -55,15 +56,9 @@ export function SiteHeader() {
             </li>
           </ul>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={toggleLanguage}
-            className="min-w-14 cursor-pointer"
-          >
+          <GlassButton onClick={toggleLanguage} className="min-w-14 text-center">
             {t("nav.langButton")}
-          </Button>
+          </GlassButton>
         </div>
       </nav>
     </header>
