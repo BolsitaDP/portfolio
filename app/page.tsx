@@ -1,5 +1,5 @@
 import { AboutSection } from "@/components/sections/about-section";
-import { ScrollSequenceBackground } from "@/components/animations/scroll-sequence-background";
+import { ThreeBackground } from "@/components/three/three-background";
 import { ContactSection } from "@/components/sections/contact-section";
 import { EducationSection } from "@/components/sections/education-section";
 import { ExperienceSection } from "@/components/sections/experience-section";
@@ -19,7 +19,7 @@ import {
 export default function Home() {
   return (
     <div className="relative isolate min-h-screen bg-background text-foreground">
-      <ScrollSequenceBackground />
+      <ThreeBackground />
       <div className="relative z-10">
         <SiteHeader />
 
