@@ -10,9 +10,11 @@ const ENSO_LAYOUT = {
   mobile: { x: 0.35, y: 0.12 },
 } as const;
 
+// Capped so muted text still meets WCAG AA (4.5:1) where it crosses the
+// darkest part of the stroke.
 const INK_STRENGTH = {
-  light: { enso: 0.24, wash: 0.045 },
-  dark: { enso: 0.09, wash: 0.006 },
+  light: { enso: 0.22, wash: 0.045 },
+  dark: { enso: 0.07, wash: 0.006 },
 } as const;
 
 // Scroll renders at most ~60fps, even on 120Hz screens. Between scrolls the

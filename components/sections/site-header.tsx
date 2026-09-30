@@ -18,7 +18,7 @@ export function SiteHeader() {
           <ul className="hidden gap-5 text-sm text-muted-foreground md:flex">
             <li>
               <a className="hover:text-foreground" href="#home">
-                Home
+                {t("nav.home")}
               </a>
             </li>
             <li>
@@ -62,6 +62,7 @@ export function SiteHeader() {
             className="min-w-14 cursor-pointer"
           >
             {t("nav.langButton")}
+            <span className="sr-only">{t("nav.langLabel")}</span>
           </Button>
         </div>
       </nav>

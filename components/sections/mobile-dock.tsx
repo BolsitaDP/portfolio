@@ -33,7 +33,7 @@ export function MobileDock() {
         <ul className="grid grid-cols-7 gap-1">
           {items.map((item) => {
             const Icon = item.icon;
-            const label = item.key === "home" ? "Home" : t(`nav.${item.key}`);
+            const label = t(`nav.${item.key}`);
 
             return (
               <li key={item.href}>
