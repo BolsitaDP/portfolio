@@ -33,7 +33,7 @@ export function AboutSection() {
         <figure className="ink-reveal mx-auto w-52 rotate-[1.5deg] rounded-sm border border-border/80 bg-card p-3 md:mx-0 md:mt-20 md:w-56">
           <div className="relative aspect-square">
             <Image
-              src={withBasePath("/profile/hotdog.png")}
+              src={withBasePath("/profile/hotdog.webp")}
               alt="Santiago Giraldo"
               fill
               className="object-contain drop-shadow-[4px_6px_6px_rgba(40,30,20,0.35)]"
