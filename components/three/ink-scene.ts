@@ -15,9 +15,16 @@ const INK_STRENGTH = {
   dark: { enso: 0.09, wash: 0.006 },
 } as const;
 
-// The ink drifts slowly, so the idle loop does not need 60fps; scroll changes
-// still render immediately.
+// Scroll renders at most ~60fps, even on 120Hz screens. Between scrolls the
+// ink keeps drifting at a lower rate, and once the reader has been still for a
+// while it settles and nothing is rendered at all.
+const SCROLL_FRAME_MS = 1000 / 60 - 1;
 const IDLE_FRAME_MS = 1000 / 24;
+const SETTLE_AFTER_MS = 6000;
+
+// Ink is soft by nature, so large screens render fewer pixels than they show
+// and let the browser upscale; phones stay at 1x.
+const MAX_BUFFER_PIXELS = 1_200_000;
 
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -63,6 +70,18 @@ const fragmentShader = /* glsl */ `
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
   }
 
+  float fbmCoarse(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    mat2 rotation = mat2(0.8, -0.6, 0.6, 0.8);
+    for (int i = 0; i < 3; i++) {
+      value += amplitude * noise(p);
+      p = rotation * p * 2.02 + 17.3;
+      amplitude *= 0.5;
+    }
+    return value;
+  }
+
   float fbm(vec2 p) {
     float value = 0.0;
     float amplitude = 0.5;
@@ -83,8 +102,8 @@ const fragmentShader = /* glsl */ `
     // Pigment gathers at the edge of each pool, as it does when ink dries.
     vec2 q = p * 1.8 + vec2(0.0, progress * 1.5);
     vec2 warp = vec2(
-      fbm(q + vec2(0.0, uTime * 0.02)),
-      fbm(q + vec2(5.2, 1.3) - vec2(uTime * 0.015, 0.0))
+      fbmCoarse(q + vec2(0.0, uTime * 0.02)),
+      fbmCoarse(q + vec2(5.2, 1.3) - vec2(uTime * 0.015, 0.0))
     );
     float cloud = fbm(q + 1.6 * warp);
     float washBody = smoothstep(0.56, 0.84, cloud);
@@ -95,66 +114,73 @@ const fragmentShader = /* glsl */ `
     vec2 center = uCenter + vec2(0.0, (progress - 0.5) * 0.1);
     vec2 d = p - center;
     float r = length(d);
-    float angle = atan(d.y, d.x);
-    float t = fract((START_ANGLE - angle) / TAU);
-    float drawn = mix(0.02, 0.9, smoothstep(0.02, 0.92, progress));
+    float enso = 0.0;
+    float gold = 0.0;
 
-    // The hand is never exact: the radius wanders and slowly spirals inward,
-    // so the end of the stroke never quite meets its start.
-    float wander = (noise(vec2(t * 6.0, 1.7)) - 0.5) * 0.06;
-    float ringRadius = uRadius * (1.0 + wander - 0.07 * t);
+    // The stroke, its blot and the crack all live within 0.7R–1.25R of the
+    // center, so the rest of the screen (most of it) skips their noise.
+    if (r > uRadius * 0.65 && r < uRadius * 1.3) {
+      float angle = atan(d.y, d.x);
+      float t = fract((START_ANGLE - angle) / TAU);
+      float drawn = mix(0.02, 0.9, smoothstep(0.02, 0.92, progress));
 
-    // Heavy landing, a swell, then thinning as the brush runs out of ink.
-    float landing = 0.35 * (1.0 - smoothstep(0.0, 0.05, t));
-    float pressure = 0.75 + 0.35 * sin(3.14159 * min(t / 0.55, 1.0));
-    float runOut = 1.0 - 0.45 * smoothstep(0.35, 0.95, t);
-    float halfWidth = uRadius * 0.11 * (pressure * runOut + landing);
-    halfWidth *= mix(0.3, 1.0, 1.0 - smoothstep(drawn - 0.07, drawn + 0.005, t));
+      // The hand is never exact: the radius wanders and slowly spirals inward,
+      // so the end of the stroke never quite meets its start.
+      float wander = (noise(vec2(t * 6.0, 1.7)) - 0.5) * 0.06;
+      float ringRadius = uRadius * (1.0 + wander - 0.07 * t);
 
-    // Fibrous, bleeding edge where the ink soaks into the paper.
-    float bleed = (fbm(p * 28.0 + 3.0) - 0.5) * 0.5;
-    float across = (r - ringRadius) / halfWidth;
-    float body = 1.0 - smoothstep(0.7, 1.0, abs(across) + bleed);
+      // Heavy landing, a swell, then thinning as the brush runs out of ink.
+      float landing = 0.35 * (1.0 - smoothstep(0.0, 0.05, t));
+      float pressure = 0.75 + 0.35 * sin(3.14159 * min(t / 0.55, 1.0));
+      float runOut = 1.0 - 0.45 * smoothstep(0.35, 0.95, t);
+      float halfWidth = uRadius * 0.11 * (pressure * runOut + landing);
+      halfWidth *= mix(0.3, 1.0, 1.0 - smoothstep(drawn - 0.07, drawn + 0.005, t));
 
-    // Kasure: dry-brush streaks that open up as the ink runs out.
-    float bristles = 0.6 * noise(vec2(across * 7.0, t * 3.0))
-      + 0.4 * noise(vec2(across * 19.0, t * 9.0 + 4.0));
-    float dryness = mix(0.08, 0.72, smoothstep(0.3, 0.95, t));
-    float kasure = smoothstep(dryness - 0.1, dryness + 0.1, bristles);
+      // Fibrous, bleeding edge where the ink soaks into the paper.
+      float bleed = (fbm(p * 28.0 + 3.0) - 0.5) * 0.5;
+      float across = (r - ringRadius) / halfWidth;
+      float body = 1.0 - smoothstep(0.7, 1.0, abs(across) + bleed);
 
-    // Wet ink is never flat: it pools toward the edges of the stroke and keeps
-    // a faint trace of the bristles even where the brush is loaded.
-    float mottle = 0.85 + 0.15 * fbm(p * 9.0);
-    float pooling = 0.25 * smoothstep(0.35, 0.85, abs(across));
-    float grain = 0.78 + 0.22 * bristles;
-    float density = (mix(1.0, 0.72, t) + landing * 0.4 + pooling) * grain * mottle;
-    float head = 1.0 - smoothstep(drawn - 0.015, drawn, t);
-    float tail = smoothstep(0.0, 0.01, t);
-    float stroke = clamp(body * kasure * density, 0.0, 1.0) * head * tail;
+      // Kasure: dry-brush streaks that open up as the ink runs out.
+      float bristles = 0.6 * noise(vec2(across * 7.0, t * 3.0))
+        + 0.4 * noise(vec2(across * 19.0, t * 9.0 + 4.0));
+      float dryness = mix(0.08, 0.72, smoothstep(0.3, 0.95, t));
+      float kasure = smoothstep(dryness - 0.1, dryness + 0.1, bristles);
 
-    // Where the brush first touches the paper it leaves a soaked, lopsided
-    // blot, visible before any scrolling happens; ink gathers at its rim.
-    float startRadius = uRadius * (1.0 + (noise(vec2(0.0, 1.7)) - 0.5) * 0.06);
-    vec2 startPoint = center + vec2(cos(START_ANGLE), sin(START_ANGLE)) * startRadius;
-    vec2 fromStart = p - startPoint;
-    float blotRadius = uRadius * 0.12 * (0.8 + 0.4 * noise(normalize(fromStart + 1e-5) * 1.8 + 7.0));
-    float blotDist = length(fromStart) / blotRadius + bleed;
-    float blot = (1.0 - smoothstep(0.75, 1.0, blotDist)) * (0.8 + 0.25 * smoothstep(0.45, 0.95, blotDist));
-    float enso = max(stroke, blot * 0.95 * mottle) * uInkStrength;
+      // Wet ink is never flat: it pools toward the edges of the stroke and keeps
+      // a faint trace of the bristles even where the brush is loaded.
+      float mottle = 0.85 + 0.15 * fbm(p * 9.0);
+      float pooling = 0.25 * smoothstep(0.35, 0.85, abs(across));
+      float grain = 0.78 + 0.22 * bristles;
+      float density = (mix(1.0, 0.72, t) + landing * 0.4 + pooling) * grain * mottle;
+      float head = 1.0 - smoothstep(drawn - 0.015, drawn, t);
+      float tail = smoothstep(0.0, 0.01, t);
+      float stroke = clamp(body * kasure * density, 0.0, 1.0) * head * tail;
 
-    // Kintsugi: once the circle is nearly closed, a crack across the stroke is
-    // revealed, mended in gold.
-    float crackAngle = CRACK_ANGLE
-      + (noise(vec2(r * 35.0, 2.3)) - 0.5) * 0.1
-      + (noise(vec2(r * 140.0, 7.1)) - 0.5) * 0.03;
-    float crack = 1.0 - smoothstep(0.0012, 0.0035, abs(angle - crackAngle) * r);
-    float crackSpan = 1.0 - smoothstep(0.8, 1.1, abs(across));
-    float reveal = smoothstep(0.84, 1.0, progress);
-    float shimmer = 0.85 + 0.15 * sin(uTime * 0.9 + r * 80.0);
-    float gold = crack * crackSpan * reveal;
+      // Where the brush first touches the paper it leaves a soaked, lopsided
+      // blot, visible before any scrolling happens; ink gathers at its rim.
+      float startRadius = uRadius * (1.0 + (noise(vec2(0.0, 1.7)) - 0.5) * 0.06);
+      vec2 startPoint = center + vec2(cos(START_ANGLE), sin(START_ANGLE)) * startRadius;
+      vec2 fromStart = p - startPoint;
+      float blotRadius = uRadius * 0.12 * (0.8 + 0.4 * noise(normalize(fromStart + 1e-5) * 1.8 + 7.0));
+      float blotDist = length(fromStart) / blotRadius + bleed;
+      float blot = (1.0 - smoothstep(0.75, 1.0, blotDist)) * (0.8 + 0.25 * smoothstep(0.45, 0.95, blotDist));
+      enso = max(stroke, blot * 0.95 * mottle) * uInkStrength;
+
+      // Kintsugi: once the circle is nearly closed, a crack across the stroke is
+      // revealed, mended in gold.
+      float crackAngle = CRACK_ANGLE
+        + (noise(vec2(r * 35.0, 2.3)) - 0.5) * 0.1
+        + (noise(vec2(r * 140.0, 7.1)) - 0.5) * 0.03;
+      float crack = 1.0 - smoothstep(0.0012, 0.0035, abs(angle - crackAngle) * r);
+      float crackSpan = 1.0 - smoothstep(0.8, 1.1, abs(across));
+      float reveal = smoothstep(0.84, 1.0, progress);
+      gold = crack * crackSpan * reveal;
+    }
 
     float inkAlpha = 1.0 - (1.0 - wash) * (1.0 - enso);
     vec3 color = mix(uPaper, uInk, inkAlpha);
+    float shimmer = 0.85 + 0.15 * sin(uTime * 0.9 + r * 80.0);
     color = mix(color, uGold * shimmer, gold * 0.9);
 
     gl_FragColor = vec4(color, 1.0);
@@ -186,9 +212,6 @@ export function createInkScene({
     alpha: true,
     powerPreference: "low-power",
   });
-  // Ink is soft by nature; rendering above 1x only costs fill rate.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
-
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
@@ -221,10 +244,10 @@ export function createInkScene({
 
   const render = () => renderer.render(scene, camera);
 
-  const startTime = performance.now();
   let rafId = 0;
   let disposed = false;
-  let lastFrame = 0;
+  let lastFrame = performance.now();
+  let lastActivity = lastFrame;
 
   const renderFrame = (now: number) => {
     if (disposed) return;
@@ -232,16 +255,25 @@ export function createInkScene({
 
     const progress = scrollProgress.value;
     const scrolled = Math.abs(progress - uniforms.uProgress.value) > 0.0005;
-    if (!scrolled && now - lastFrame < IDLE_FRAME_MS) return;
+    if (scrolled) lastActivity = now;
+    if (now - lastActivity > SETTLE_AFTER_MS) return;
 
-    lastFrame = now;
-    uniforms.uTime.value = (now - startTime) / 1000;
+    const elapsed = now - lastFrame;
+    if (elapsed < (scrolled ? SCROLL_FRAME_MS : IDLE_FRAME_MS)) return;
+
+    // Scene time only advances while rendering, so the ink resumes where it
+    // settled instead of jumping ahead.
+    uniforms.uTime.value += Math.min(elapsed, 100) / 1000;
     uniforms.uProgress.value = progress;
+    lastFrame = now;
     render();
   };
 
   const resize = (width: number, height: number) => {
     if (width <= 0 || height <= 0) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1);
+    const budget = Math.sqrt(MAX_BUFFER_PIXELS / (width * height));
+    renderer.setPixelRatio(Math.min(dpr, budget));
     renderer.setSize(width, height, false);
 
     const aspect = width / height;
