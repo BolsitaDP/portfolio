@@ -6,6 +6,7 @@ import { ExperienceSection } from "@/components/sections/experience-section";
 import { HomeSection } from "@/components/sections/home-section";
 import { MobileDock } from "@/components/sections/mobile-dock";
 import { ProjectsSection } from "@/components/sections/projects-section";
+import { SiteFooter } from "@/components/sections/site-footer";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SkillsSection } from "@/components/sections/skills-section";
 import {
@@ -23,7 +24,7 @@ export default function Home() {
       <div className="relative z-10">
         <SiteHeader />
 
-        <main className="mx-auto w-full max-w-6xl px-6 pb-28 md:pb-16">
+        <main className="mx-auto w-full max-w-6xl px-6">
           <HomeSection />
           <AboutSection />
           <ProjectsSection projects={projects} />
@@ -32,6 +33,8 @@ export default function Home() {
           <ExperienceSection experience={experience} />
           <ContactSection />
         </main>
+
+        <SiteFooter />
 
         <MobileDock />
       </div>
