@@ -33,7 +33,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
   return (
     <section id="projects" className="space-y-6">
       <div className="flex items-end justify-between gap-4">
-        <h2 className="text-2xl font-semibold tracking-tight">
+        <h2 className="text-2xl font-medium">
           {t("projects.title")}
         </h2>
         <Badge variant="secondary">{t("projects.featured")}</Badge>
@@ -43,14 +43,14 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         {projects.map((project) => (
           <Dialog key={project.title.en}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer rounded-xl hover:-translate-y-1">
+              <Card className="cursor-pointer rounded-xl">
                 <div className="px-6 pt-6">
                   <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border/60 bg-muted/30">
                     <Image
                       src={withBasePath(project.imageSrc)}
                       alt={project.imageAlt[language]}
                       fill
-                      className="object-cover object-top transition-transform duration-500 hover:scale-[1.02]"
+                      className="object-cover object-top transition-transform duration-1000 ease-brush hover:scale-[1.02]"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
@@ -91,7 +91,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
 
               <div className="min-h-0 space-y-6 overflow-y-auto p-6 pr-14">
                 <DialogHeader className="text-left">
-                  <DialogTitle className="text-2xl tracking-tight">
+                  <DialogTitle className="text-2xl">
                     {project.title[language]}
                   </DialogTitle>
                   <DialogDescription className="leading-6">

@@ -48,7 +48,7 @@ export function SkillsSection({ skills, softSkills }: SkillsSectionProps) {
     <section id="skills" className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
       <Card className="rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-2xl tracking-tight">
+          <CardTitle className="text-2xl">
             {t("skills.title")}
           </CardTitle>
           <CardDescription>{t("skills.subtitle")}</CardDescription>
@@ -74,7 +74,7 @@ export function SkillsSection({ skills, softSkills }: SkillsSectionProps) {
 
       <Card id="soft-skills" className="rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-2xl tracking-tight">
+          <CardTitle className="text-2xl">
             {t("skills.softTitle")}
           </CardTitle>
           <CardDescription>{t("skills.softSubtitle")}</CardDescription>

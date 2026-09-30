@@ -29,7 +29,7 @@ export function ContactSection() {
     <section id="contact">
       <Card className="rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-2xl tracking-tight">
+          <CardTitle className="text-2xl">
             {t("contact.title")}
           </CardTitle>
           <CardDescription>{t("contact.subtitle")}</CardDescription>

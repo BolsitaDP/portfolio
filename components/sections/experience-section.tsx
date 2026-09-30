@@ -21,7 +21,7 @@ export function ExperienceSection({ experience }: ExperienceSectionProps) {
 
   return (
     <section id="experience" className="space-y-4">
-      <h2 className="text-2xl font-semibold tracking-tight">
+      <h2 className="text-2xl font-medium">
         {t("experience.title")}
       </h2>
       <div className="space-y-4">

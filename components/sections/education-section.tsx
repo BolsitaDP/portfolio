@@ -21,7 +21,7 @@ export function EducationSection({ education }: EducationSectionProps) {
 
   return (
     <section id="education" className="space-y-4">
-      <h2 className="text-2xl font-semibold tracking-tight">
+      <h2 className="text-2xl font-medium">
         {t("education.title")}
       </h2>
       <div className="grid gap-4 md:grid-cols-2">

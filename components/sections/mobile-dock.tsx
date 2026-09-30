@@ -28,7 +28,7 @@ export function MobileDock() {
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] md:hidden">
       <nav
         aria-label="Mobile navigation"
-        className="pointer-events-auto mx-auto w-full max-w-lg rounded-[1.35rem] border border-white/12 bg-background/55 p-1.5 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+        className="pointer-events-auto mx-auto w-full max-w-lg rounded-xl border border-border bg-background p-1.5"
       >
         <ul className="grid grid-cols-7 gap-1">
           {items.map((item) => {
@@ -39,7 +39,7 @@ export function MobileDock() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="group flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] text-muted-foreground transition-colors hover:bg-white/8 hover:text-foreground active:scale-[0.98]"
+                  className="group flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-[0.98]"
                 >
                   <Icon className="size-4 transition-transform group-active:scale-95" />
                   <span className="truncate leading-none">{label}</span>

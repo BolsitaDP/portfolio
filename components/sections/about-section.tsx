@@ -20,7 +20,7 @@ export function AboutSection() {
         <div className="grid gap-6 md:grid-cols-[1.25fr_0.75fr] md:items-stretch">
           <div>
             <CardHeader>
-              <CardTitle className="text-2xl tracking-tight">
+              <CardTitle className="text-2xl">
                 {t("about.title")}
               </CardTitle>
             </CardHeader>
@@ -33,15 +33,11 @@ export function AboutSection() {
 
           <div className="grid min-h-[220px] place-items-center px-6 pb-6 md:min-h-full md:py-6">
             <div className="relative aspect-square w-full max-w-52 md:max-w-60">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -inset-6 rounded-full bg-primary/10 blur-2xl"
-              />
               <Image
                 src={withBasePath("/profile/hotdog.png")}
                 alt="Santiago Giraldo"
                 fill
-                className="object-contain drop-shadow-[5px_5px_5px_rgba(0,0,0,0.75)]"
+                className="object-contain drop-shadow-[4px_6px_6px_rgba(40,30,20,0.35)]"
                 style={{
                   maskImage: "linear-gradient(black 65%, transparent)",
                   WebkitMaskImage: "linear-gradient(black 65%, transparent)",

@@ -7,12 +7,9 @@ export function SiteHeader() {
   const { t, toggleLanguage } = useI18n();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b bg-background/95">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <span
-          className="text-base leading-none text-foreground md:text-lg"
-          style={{ fontFamily: "var(--font-yuji-boku)" }}
-        >
+        <span className="font-brush text-base leading-none text-foreground md:text-lg">
           Santiago Giraldo
         </span>
 
