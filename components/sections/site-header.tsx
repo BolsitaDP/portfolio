@@ -17,37 +17,37 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <ul className="hidden gap-5 text-sm text-muted-foreground md:flex">
             <li>
-              <a className="hover:text-foreground" href="#home">
+              <a className="ink-link hover:text-foreground" href="#home">
                 {t("nav.home")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#about">
+              <a className="ink-link hover:text-foreground" href="#about">
                 {t("nav.about")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#projects">
+              <a className="ink-link hover:text-foreground" href="#projects">
                 {t("nav.projects")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#skills">
+              <a className="ink-link hover:text-foreground" href="#skills">
                 {t("nav.skills")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#education">
+              <a className="ink-link hover:text-foreground" href="#education">
                 {t("nav.education")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#experience">
+              <a className="ink-link hover:text-foreground" href="#experience">
                 {t("nav.experience")}
               </a>
             </li>
             <li>
-              <a className="hover:text-foreground" href="#contact">
+              <a className="ink-link hover:text-foreground" href="#contact">
                 {t("nav.contact")}
               </a>
             </li>

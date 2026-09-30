@@ -71,7 +71,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                   </p>
                   <span
                     aria-hidden="true"
-                    className="mt-4 inline-block text-sm underline decoration-border underline-offset-4 transition-colors duration-500 group-hover:decoration-foreground"
+                    className="ink-link mt-4 inline-block text-sm"
                   >
                     {t("projects.viewDetails")}
                   </span>

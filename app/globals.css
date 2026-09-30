@@ -11,7 +11,7 @@
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-shippori-mincho);
   --font-brush: var(--font-yuji-boku);
-  --ease-brush: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-brush: var(--brush-curve);
   --color-kintsugi: var(--kintsugi);
   --color-overlay: var(--overlay);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -54,6 +54,9 @@
 
 /* Washi: warm unbleached paper and sumi ink. */
 :root {
+  --brush-curve: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* One of the heading strokes (components/ui/brush-stroke.tsx), as a mask. */
+  --brush-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 6.5C20 4.2 50 3.6 80 4.4C96 4.8 110 5.6 118 6.8C110 7.4 96 7.6 80 7.9C50 8.8 22 9.6 4 9.2C1.5 9.1 0.8 7 2 6.5Z'/%3E%3C/svg%3E");
   --radius: 0.3rem;
   --background: oklch(0.955 0.012 85);
   --foreground: oklch(0.24 0.012 60);
@@ -150,6 +153,110 @@
       animation-range: entry 5% cover 30%;
     }
   }
+}
+
+/* The stroke under each section title is drawn left to right as it scrolls
+   in, the same way the ensō is drawn by reading the page. */
+@utility brush-draw {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: brush-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 100% cover 35%;
+    }
+  }
+}
+
+@keyframes brush-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+/* A brush stroke is drawn under the link on hover or keyboard focus. Inside a
+   `group` (a project card), hovering the whole card draws it too. */
+@utility ink-link {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -0.15em;
+    bottom: -0.4em;
+    left: -0.15em;
+    height: 0.45em;
+    background: currentColor;
+    opacity: 0.45;
+    mask-image: var(--brush-mask);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 650ms var(--brush-curve);
+    pointer-events: none;
+  }
+
+  &:hover::after,
+  &:focus-visible::after,
+  .group:hover &::after,
+  .group:focus-within &::after {
+    clip-path: inset(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+/* Dialogs open like a drop of ink spreading from their center. The clip is
+   dropped once open (fill: backwards) so the shadow is not cut off. */
+@utility ink-dialog {
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-state="open"] {
+      animation: ink-open 600ms var(--brush-curve) backwards;
+    }
+
+    &[data-state="closed"] {
+      animation: ink-close 220ms ease-in forwards;
+    }
+  }
+}
+
+@keyframes ink-open {
+  from {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0.6;
+  }
+
+  to {
+    clip-path: circle(75% at 50% 50%);
+    opacity: 1;
+  }
+}
+
+@keyframes ink-close {
+  from {
+    clip-path: circle(75% at 50% 50%);
+    opacity: 1;
+  }
+
+  to {
+    clip-path: circle(20% at 50% 50%);
+    opacity: 0;
+  }
+}
+
+/* Theme changes spread from the toggle as a growing circle of ink; the
+   circle itself is animated from components/sections/theme-toggle.tsx. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 @keyframes ink-reveal {
