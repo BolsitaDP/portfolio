@@ -1,16 +1,10 @@
 "use client";
 
+import { SectionHeading } from "@/components/sections/section-heading";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/portfolio-data";
-import { Copy, Linkedin, Mail } from "lucide-react";
+import { ArrowUpRight, Copy, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 
 export function ContactSection() {
@@ -26,45 +20,49 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact">
-      <Card className="rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl">
-            {t("contact.title")}
-          </CardTitle>
-          <CardDescription>{t("contact.subtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-muted/30 p-4 transition-all duration-300 hover:border-primary/40 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Mail className="size-4" aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {t("contact.email")}
-                </p>
-                <p className="mt-1 truncate font-mono text-sm text-foreground">
-                  {profile.email}
-                </p>
-              </div>
-            </div>
-            <Button type="button" className="cursor-pointer" variant="outline" onClick={handleCopyEmail}>
+    <section id="contact" className="py-20 md:py-32">
+      <SectionHeading
+        index={6}
+        title={t("contact.title")}
+        description={t("contact.subtitle")}
+      />
+
+      <div className="ink-reveal space-y-10">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            {t("contact.email")}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href={`mailto:${profile.email}`}
+              className="break-all font-serif text-2xl underline decoration-border decoration-1 underline-offset-8 transition-colors duration-500 hover:decoration-foreground md:text-4xl"
+            >
+              {profile.email}
+            </a>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="cursor-pointer text-muted-foreground"
+              onClick={handleCopyEmail}
+            >
               <Copy className="size-4" />
               {t("contact.copyEmail")}
             </Button>
           </div>
+        </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button asChild variant="outline">
-              <a href={profile.linkedin} target="_blank" rel="noreferrer">
-                <Linkedin className="size-4" />
-                {t("contact.linkedin")}
-              </a>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        <a
+          href={profile.linkedin}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors duration-500 hover:text-foreground"
+        >
+          <Linkedin className="size-4" aria-hidden="true" />
+          {t("contact.linkedin")}
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </a>
+      </div>
     </section>
   );
 }

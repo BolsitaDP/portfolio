@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { SectionHeading } from "@/components/sections/section-heading";
 import { useI18n } from "@/lib/i18n";
 import type { Skill, SoftSkill } from "@/lib/portfolio-data";
 import {
@@ -45,60 +39,45 @@ export function SkillsSection({ skills, softSkills }: SkillsSectionProps) {
   const { t, language } = useI18n();
 
   return (
-    <section id="skills" className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-      <Card className="rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl">
-            {t("skills.title")}
-          </CardTitle>
-          <CardDescription>{t("skills.subtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
-          {skills.map((skill) => {
-            const Icon = iconMap[skill.iconName];
+    <section id="skills" className="py-20 md:py-28">
+      <SectionHeading index={3} title={t("nav.skills")} />
 
-            return (
-              <div
-                key={skill.label.en}
-                className="group flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3 text-sm transition-all duration-300 hover:border-primary/40 hover:bg-muted/50"
-              >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/20">
-                  <Icon className="size-4" aria-hidden="true" />
-                </span>
-                <span className="font-medium">{skill.label[language]}</span>
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+      <div className="grid gap-16 lg:grid-cols-[1.2fr_1fr] lg:gap-20">
+        <div className="ink-reveal">
+          <h3 className="text-xl">{t("skills.title")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("skills.subtitle")}</p>
+          <ul className="mt-6 grid border-t border-border/80 sm:grid-cols-2 sm:gap-x-10">
+            {skills.map((skill) => {
+              const Icon = iconMap[ skill.iconName ];
 
-      <Card id="soft-skills" className="rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-2xl">
-            {t("skills.softTitle")}
-          </CardTitle>
-          <CardDescription>{t("skills.softSubtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {softSkills.map((skill) => (
-            <div
-              key={skill.title.en}
-              className="rounded-xl border border-border/60 bg-muted/30 p-4 transition-all duration-300 hover:border-primary/40 hover:bg-muted/50"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="size-1.5 shrink-0 rounded-full bg-primary"
-                />
-                <p className="text-sm font-medium">{skill.title[language]}</p>
+              return (
+                <li
+                  key={skill.label.en}
+                  className="flex items-center gap-3 border-b border-border/80 py-3.5 text-sm"
+                >
+                  <Icon className="size-4 text-muted-foreground" aria-hidden="true" />
+                  {skill.label[ language ]}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="ink-reveal lg:mt-16">
+          <h3 className="text-xl">{t("skills.softTitle")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("skills.softSubtitle")}</p>
+          <dl className="mt-6 space-y-7">
+            {softSkills.map((skill) => (
+              <div key={skill.title.en}>
+                <dt className="font-serif text-lg">{skill.title[ language ]}</dt>
+                <dd className="mt-1 text-sm leading-6 text-muted-foreground">
+                  {skill.description[ language ]}
+                </dd>
               </div>
-              <p className="mt-1 pl-3.5 text-sm text-muted-foreground">
-                {skill.description[language]}
-              </p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </dl>
+        </div>
+      </div>
     </section>
   );
 }

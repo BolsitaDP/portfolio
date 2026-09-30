@@ -11,8 +11,8 @@ const ENSO_LAYOUT = {
 } as const;
 
 const INK_STRENGTH = {
-  light: { enso: 0.24, wash: 0.06 },
-  dark: { enso: 0.09, wash: 0.015 },
+  light: { enso: 0.24, wash: 0.045 },
+  dark: { enso: 0.09, wash: 0.006 },
 } as const;
 
 // The ink drifts slowly, so the idle loop does not need 60fps; scroll changes
@@ -132,11 +132,14 @@ const fragmentShader = /* glsl */ `
     float tail = smoothstep(0.0, 0.01, t);
     float stroke = clamp(body * kasure * density, 0.0, 1.0) * head * tail;
 
-    // Where the brush first touches the paper it leaves a round, soaked blot,
-    // visible before any scrolling happens.
+    // Where the brush first touches the paper it leaves a soaked, lopsided
+    // blot, visible before any scrolling happens; ink gathers at its rim.
     float startRadius = uRadius * (1.0 + (noise(vec2(0.0, 1.7)) - 0.5) * 0.06);
     vec2 startPoint = center + vec2(cos(START_ANGLE), sin(START_ANGLE)) * startRadius;
-    float blot = 1.0 - smoothstep(0.75, 1.0, length(p - startPoint) / (uRadius * 0.12) + bleed);
+    vec2 fromStart = p - startPoint;
+    float blotRadius = uRadius * 0.12 * (0.8 + 0.4 * noise(normalize(fromStart + 1e-5) * 1.8 + 7.0));
+    float blotDist = length(fromStart) / blotRadius + bleed;
+    float blot = (1.0 - smoothstep(0.75, 1.0, blotDist)) * (0.8 + 0.25 * smoothstep(0.45, 0.95, blotDist));
     float enso = max(stroke, blot * 0.95 * mottle) * uInkStrength;
 
     // Kintsugi: once the circle is nearly closed, a crack across the stroke is

@@ -30,6 +30,7 @@ const translations = {
     },
     home: {
       badge: "Home (básica)",
+      scroll: "Seguir leyendo",
     },
     about: {
       title: "Sobre mí",
@@ -81,6 +82,7 @@ const translations = {
     },
     home: {
       badge: "Home (basic)",
+      scroll: "Keep reading",
     },
     about: {
       title: "About Me",
