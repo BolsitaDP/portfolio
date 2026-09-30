@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/sections/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 
@@ -7,7 +8,7 @@ export function SiteHeader() {
   const { t, toggleLanguage } = useI18n();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <span className="font-brush text-base leading-none text-foreground md:text-lg">
           Santiago Giraldo
@@ -52,6 +53,7 @@ export function SiteHeader() {
             </li>
           </ul>
 
+          <ThemeToggle />
           <Button
             type="button"
             variant="outline"

@@ -3,8 +3,8 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { useTheme } from "next-themes";
 import { createInkScene } from "@/components/three/ink-scene";
+import { useIsDarkTheme } from "@/lib/hooks/use-is-dark-theme";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { usePrefersReducedMotion } from "@/lib/hooks/use-prefers-reduced-motion";
 import { scrollProgress } from "@/lib/three/scroll-progress";
@@ -22,8 +22,7 @@ export function ThreeBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isMobile = useMediaQuery("(max-width: 767px)");
   const reduceMotion = usePrefersReducedMotion();
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const isDark = useIsDarkTheme();
   const webglOk = useSyncExternalStore(
     noWebglSubscription,
     isWebglAvailable,

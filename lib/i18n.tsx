@@ -26,6 +26,7 @@ const translations = {
       experience: "Experiencia",
       contact: "Contacto",
       langButton: "EN",
+      themeToggle: "Cambiar tema",
     },
     home: {
       badge: "Home (básica)",
@@ -76,6 +77,7 @@ const translations = {
       experience: "Experience",
       contact: "Contact",
       langButton: "ES",
+      themeToggle: "Toggle theme",
     },
     home: {
       badge: "Home (basic)",
