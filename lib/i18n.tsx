@@ -19,6 +19,7 @@ interface Dictionary {
 const translations = {
   es: {
     nav: {
+      home: "Inicio",
       about: "Sobre mí",
       projects: "Proyectos",
       skills: "Skills",
@@ -26,9 +27,12 @@ const translations = {
       experience: "Experiencia",
       contact: "Contacto",
       langButton: "EN",
+      langLabel: "Cambiar idioma a inglés",
+      themeToggle: "Cambiar tema",
     },
     home: {
       badge: "Home (básica)",
+      scroll: "Seguir leyendo",
     },
     about: {
       title: "Sobre mí",
@@ -69,6 +73,7 @@ const translations = {
   },
   en: {
     nav: {
+      home: "Home",
       about: "About",
       projects: "Projects",
       skills: "Skills",
@@ -76,9 +81,12 @@ const translations = {
       experience: "Experience",
       contact: "Contact",
       langButton: "ES",
+      langLabel: "Switch language to Spanish",
+      themeToggle: "Toggle theme",
     },
     home: {
       badge: "Home (basic)",
+      scroll: "Keep reading",
     },
     about: {
       title: "About Me",

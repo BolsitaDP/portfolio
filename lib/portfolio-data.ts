@@ -106,7 +106,7 @@ export const projects: Project[] = [
       },
     ],
     stack: [ "React", "TypeScript", "MUI components", ".Net", "Redux" ],
-    imageSrc: "/projects/project-1/cerveceria.jpg",
+    imageSrc: "/projects/project-1/cerveceria.webp",
     imageAlt: {
       es: "Vista del proyecto de cerveceria",
       en: "Brewery project screenshot",
@@ -139,7 +139,7 @@ export const projects: Project[] = [
       },
     ],
     stack: [ "React", ".Net", "UI/UX", "Operations", "MUI components", "Redux" ],
-    imageSrc: "/projects/project-2/genfar.png",
+    imageSrc: "/projects/project-2/genfar.webp",
     imageAlt: {
       es: "Captura del módulo de Genfar",
       en: "Genfar module screenshot",
@@ -172,7 +172,7 @@ export const projects: Project[] = [
       },
     ],
     stack: [ "Vue", "Forms", "Operations", ".Net", "Internal Tools" ],
-    imageSrc: "/projects/project-3/process.jpg",
+    imageSrc: "/projects/project-3/process.webp",
     imageAlt: {
       es: "Captura de la aplicación de procesos",
       en: "Process app screenshot",
@@ -205,7 +205,7 @@ export const projects: Project[] = [
       },
     ],
     stack: [ "React", "MUI components", "Responsive UI" ],
-    imageSrc: "/projects/project-4/bpmco_website.jpg",
+    imageSrc: "/projects/project-4/bpmco_website.webp",
     imageAlt: {
       es: "Captura del sitio web de BPMco",
       en: "BPMco website screenshot",

@@ -1,57 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { SectionHeading } from "@/components/sections/section-heading";
 import { withBasePath } from "@/lib/base-path";
 import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/portfolio-data";
 
+function splitLead(text: string) {
+  const end = text.indexOf(". ");
+  if (end === -1) return { lead: text, rest: "" };
+  return { lead: text.slice(0, end + 1), rest: text.slice(end + 2) };
+}
+
 export function AboutSection() {
   const { t, language } = useI18n();
+  const { lead, rest } = splitLead(profile.summary[ language ]);
 
   return (
-    <section id="about">
-      <Card className="rounded-2xl">
-        <div className="grid gap-6 md:grid-cols-[1.25fr_0.75fr] md:items-stretch">
-          <div>
-            <CardHeader>
-              <CardTitle className="text-2xl tracking-tight">
-                {t("about.title")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="max-w-3xl leading-7 text-muted-foreground">
-                {profile.summary[ language ]}
-              </p>
-            </CardContent>
-          </div>
+    <section id="about" className="py-20 md:py-28">
+      <SectionHeading index={1} title={t("about.title")} />
 
-          <div className="grid min-h-[220px] place-items-center px-6 pb-6 md:min-h-full md:py-6">
-            <div className="relative aspect-square w-full max-w-52 md:max-w-60">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -inset-6 rounded-full bg-primary/10 blur-2xl"
-              />
-              <Image
-                src={withBasePath("/profile/hotdog.png")}
-                alt="Santiago Giraldo"
-                fill
-                className="object-contain drop-shadow-[5px_5px_5px_rgba(0,0,0,0.75)]"
-                style={{
-                  maskImage: "linear-gradient(black 65%, transparent)",
-                  WebkitMaskImage: "linear-gradient(black 65%, transparent)",
-                }}
-                sizes="(max-width: 768px) 208px, 240px"
-              />
-            </div>
-          </div>
+      <div className="grid gap-14 md:grid-cols-[minmax(0,1fr)_14rem] md:items-start lg:gap-24">
+        <div className="ink-reveal max-w-2xl">
+          <p className="font-serif text-2xl leading-snug md:text-3xl">{lead}</p>
+          {rest ? (
+            <p className="mt-6 text-base leading-8 text-muted-foreground md:text-lg">
+              {rest}
+            </p>
+          ) : null}
         </div>
-      </Card>
+
+        <figure className="ink-reveal mx-auto w-52 rotate-[1.5deg] rounded-sm border border-border/80 bg-card p-3 md:mx-0 md:mt-20 md:w-56">
+          <div className="relative aspect-square">
+            <Image
+              src={withBasePath("/profile/hotdog.webp")}
+              alt="Santiago Giraldo"
+              fill
+              className="object-contain drop-shadow-[4px_6px_6px_rgba(40,30,20,0.35)]"
+              style={{
+                maskImage: "linear-gradient(black 65%, transparent)",
+                WebkitMaskImage: "linear-gradient(black 65%, transparent)",
+              }}
+              sizes="224px"
+            />
+          </div>
+        </figure>
+      </div>
     </section>
   );
 }
