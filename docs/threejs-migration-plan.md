@@ -2,6 +2,8 @@
 
 > Documento de planeación. No implica cambios de código — es la base para decidir alcance, dirección creativa y arquitectura antes de tocar nada.
 
+> **Nota (septiembre 2026):** la dirección creativa "constructo / grid de código" fue reemplazada por un rediseño wabi-sabi con una escena de tinta sumi. La arquitectura de three.js descrita aquí sigue vigente en lo esencial; el estado actual está documentado en [wabi-sabi-design-guide.md](./wabi-sabi-design-guide.md).
+
 ## 0. Resumen
 
 El portfolio actual es un sitio Next.js de una sola página (App Router, export estático) con un fondo animado a base de una **secuencia de imágenes** (efecto "scroll-scrubbing" estilo Apple) y secciones de contenido clásicas (About, Proyectos, Skills, Educación, Experiencia, Contacto) con soporte bilingüe ES/EN. La idea es reemplazar/evolucionar esa pieza visual central — y potencialmente más — usando **three.js** para pasar de una animación pre-renderizada a una escena 3D real, interactiva y ligada al scroll.
